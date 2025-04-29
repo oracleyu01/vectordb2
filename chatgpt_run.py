@@ -36,7 +36,12 @@ st.write("광진구의 다양한 착한가게에 대한 정보를 물어보세�
 # 임베딩 모델 설정 (세션 상태에 저장하여 재로딩 방지)
 @st.cache_resource
 def load_embedding_model():
-    return SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')  # 다국어 지원 모델 사용
+    try:
+        return SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+    except OSError:
+        # 대체 모델 시도
+        st.warning("기본 모델 로딩에 실패했습니다. 대체 모델을 사용합니다.")
+        return SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
 embedding_model = load_embedding_model()
 
